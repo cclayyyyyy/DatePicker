@@ -1,3 +1,4 @@
+// app/calendar/page.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -14,25 +15,23 @@ interface Event {
   title: string;
 }
 
-const MyCalendar: React.FC = () => {
+export default function MyCalendar() {
   const [events, setEvents] = useState<Event[]>([]);
   const router = useRouter();
 
+  // 1. 页面初始化时，从 localStorage 读取整体事件
   useEffect(() => {
     try {
-      const storedEvents = localStorage.getItem('events');
-      if (storedEvents) {
-        const parsedEvents = JSON.parse(storedEvents);
-        if (Array.isArray(parsedEvents)) {
-          const rehydratedEvents = parsedEvents.map((event: any) => ({
-            ...event,
-            start: new Date(event.start),
-            end: new Date(event.end)
+      const stored = localStorage.getItem('events');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          const rehydrated = parsed.map((e: any) => ({
+            ...e,
+            start: new Date(e.start),
+            end: new Date(e.end),
           }));
-          setEvents(rehydratedEvents);
-        } else {
-          console.error('Stored events is not an array, resetting storage');
-          localStorage.setItem('events', JSON.stringify([]));
+          setEvents(rehydrated);
         }
       }
     } catch (error) {
@@ -41,17 +40,18 @@ const MyCalendar: React.FC = () => {
     }
   }, []);
 
+  // 2. 用户在日历中选了一个时段（start~end），存成一个“整体事件”
   const handleSelectSlot = ({ start, end }: SlotInfo) => {
     const title = window.prompt('Enter event title');
     if (title) {
       const newEvent = { start, end, title };
       const updatedEvents = [...events, newEvent];
-
       setEvents(updatedEvents);
       localStorage.setItem('events', JSON.stringify(updatedEvents));
     }
   };
 
+  // 3. 按钮跳转到 /timeslots 页面
   const handleViewSelection = () => {
     router.push('/slots');
   };
@@ -72,6 +72,4 @@ const MyCalendar: React.FC = () => {
       <button onClick={handleViewSelection}>View Time Slots</button>
     </div>
   );
-};
-
-export default MyCalendar;
+}
