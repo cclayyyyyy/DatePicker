@@ -1,0 +1,31 @@
+.calendarContainer {
+    max-width: 1000px;
+    margin: 20px auto;
+  }
+  
+  .viewButton {
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .rbc-today {
+    background-color: #fff !important;
+  }
+  
+  .rbc-day-slot .rbc-time-slot {
+    border-top: 1px solid #ddd;
+  }
+
+  .rbc-event {
+    background-color: #0d6efd;
+    border: none;
+    color: white;
+    padding: 2px 43px;
+    border-radius: 4px;
+  }
+  

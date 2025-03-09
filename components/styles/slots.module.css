@@ -1,0 +1,22 @@
+.timeSelect {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  transition: border 0.3s ease-in-out;
+}
+
+.timeSelect:hover {
+  border: 1px solid #ccc;
+}
+
+.timeSelect:focus {
+  border: 1px solid #007BFF;
+  outline: none;
+}
+
+.timeSelect option {
+  padding: 6px 10px;
+  font-size: 14px;
+}

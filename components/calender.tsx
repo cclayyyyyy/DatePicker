@@ -3,15 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer, SlotInfo } from 'react-big-calendar';
 import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useRouter } from 'next/navigation';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
 
 interface Event {
   start: Date;
   end: Date;
-  title: string;
+  title?: string;
 }
 
 export default function MyCalendar() {
@@ -39,33 +39,44 @@ export default function MyCalendar() {
   }, []);
 
   const handleSelectSlot = ({ start, end }: SlotInfo) => {
-    const title = window.prompt('Enter event title');
-    if (title) {
-      const newEvent = { start, end, title };
-      const updatedEvents = [...events, newEvent];
-      setEvents(updatedEvents);
-      localStorage.setItem('events', JSON.stringify(updatedEvents));
-    }
+    const newEvent = { start, end, title: '' };
+    const updatedEvents = [...events, newEvent];
+    setEvents(updatedEvents);
+    localStorage.setItem('events', JSON.stringify(updatedEvents));
   };
+
 
   const handleViewSelection = () => {
     router.push('/slots');
   };
 
+  const handleSelecting = (slotRange: { start: Date; end: Date }) => {
+    const hasOverlap = events.some((event) => {
+      return slotRange.start < event.end && slotRange.end > event.start;
+    });
+    return !hasOverlap;
+  };
+
   return (
-    <div>
+    <div style={{ maxWidth: '1000px', margin: '20px auto' }}>
       <Calendar
         localizer={localizer}
         events={events}
         selectable
+        onSelecting={handleSelecting}
         onSelectSlot={handleSelectSlot}
         defaultView="week"
         views={['week']}
         step={60}
         showMultiDayTimes
-        style={{ height: 500 }}
+        style={{ height: 600 }}
       />
-      <button onClick={handleViewSelection}>View Time Slots</button>
+      <button 
+        onClick={handleViewSelection}
+        className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        View Time Slots
+      </button>
+
     </div>
   );
 }
